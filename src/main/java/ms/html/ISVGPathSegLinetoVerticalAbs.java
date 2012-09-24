@@ -1,0 +1,34 @@
+package ms.html  ;
+
+import com4j.*;
+
+@IID("{3051050A-98B5-11CF-BB82-00AA00BDCE0B}")
+public interface ISVGPathSegLinetoVerticalAbs extends Com4jObject {
+  // Methods:
+  /**
+   * <p>
+   * Setter method for the COM property "y"
+   * </p>
+   * @param p Mandatory float parameter.
+   */
+
+  @DISPID(1020) //= 0x3fc. The runtime will prefer the VTID if present
+  @VTID(7)
+  void y(
+    float p);
+
+
+  /**
+   * <p>
+   * Getter method for the COM property "y"
+   * </p>
+   * @return  Returns a value of type float
+   */
+
+  @DISPID(1020) //= 0x3fc. The runtime will prefer the VTID if present
+  @VTID(8)
+  float y();
+
+
+  // Properties:
+}

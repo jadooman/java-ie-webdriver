@@ -1,0 +1,167 @@
+package ms.html  ;
+
+import com4j.*;
+
+@IID("{00020400-0000-0000-C000-000000000046}")
+public interface DispHTMLStyleSheetRule extends Com4jObject {
+  // Methods:
+  /**
+   * <p>
+   * Getter method for the COM property "type"
+   * </p>
+   */
+
+  @DISPID(1101)
+  @PropGet
+  short type();
+
+
+  /**
+   * <p>
+   * Setter method for the COM property "cssText"
+   * </p>
+   * @param rhs Mandatory java.lang.String parameter.
+   */
+
+  @DISPID(1102)
+  @PropPut
+  void cssText(
+    java.lang.String rhs);
+
+
+  /**
+   * <p>
+   * Getter method for the COM property "cssText"
+   * </p>
+   */
+
+  @DISPID(1102)
+  @PropGet
+  java.lang.String cssText();
+
+
+  /**
+   * <p>
+   * Getter method for the COM property "parentRule"
+   * </p>
+   */
+
+  @DISPID(1103)
+  @PropGet
+  ms.html.IHTMLCSSRule parentRule();
+
+
+  /**
+   * <p>
+   * Getter method for the COM property "parentStyleSheet"
+   * </p>
+   */
+
+  @DISPID(1104)
+  @PropGet
+  ms.html.IHTMLStyleSheet parentStyleSheet();
+
+
+  /**
+   * <p>
+   * Setter method for the COM property "selectorText"
+   * </p>
+   * @param rhs Mandatory java.lang.String parameter.
+   */
+
+  @DISPID(1001)
+  @PropPut
+  void selectorText(
+    java.lang.String rhs);
+
+
+  /**
+   * <p>
+   * Getter method for the COM property "selectorText"
+   * </p>
+   */
+
+  @DISPID(1001)
+  @PropGet
+  java.lang.String selectorText();
+
+
+  /**
+   * <p>
+   * Getter method for the COM property "style"
+   * </p>
+   */
+
+  @DISPID(-2147418038)
+  @PropGet
+  ms.html.IHTMLRuleStyle style();
+
+
+  /**
+   * <p>
+   * Getter method for the COM property "readOnly"
+   * </p>
+   */
+
+  @DISPID(1002)
+  @PropGet
+  boolean readOnly();
+
+
+  /**
+   * <p>
+   * Setter method for the COM property "ie9_selectorText"
+   * </p>
+   * @param rhs Mandatory java.lang.String parameter.
+   */
+
+  @DISPID(1005)
+  @PropPut
+  void ie9_selectorText(
+    java.lang.String rhs);
+
+
+  /**
+   * <p>
+   * Getter method for the COM property "ie9_selectorText"
+   * </p>
+   */
+
+  @DISPID(1005)
+  @PropGet
+  java.lang.String ie9_selectorText();
+
+
+  /**
+   * <p>
+   * Getter method for the COM property "msSpecificity"
+   * </p>
+   */
+
+  @DISPID(1003)
+  @PropGet
+  int msSpecificity();
+
+
+  /**
+   * @param index Mandatory int parameter.
+   */
+
+  @DISPID(1004)
+  int msGetSpecificity(
+    int index);
+
+
+  /**
+   * <p>
+   * Getter method for the COM property "constructor"
+   * </p>
+   */
+
+  @DISPID(-2147417603)
+  @PropGet
+  com4j.Com4jObject constructor();
+
+
+  // Properties:
+}
