@@ -534,8 +534,8 @@ public class JavaIEDriver
     @Override
     public void refresh()
     {
-      ie.refresh();
       waitForIdle();
+      ie.refresh();
     }
   }
 
