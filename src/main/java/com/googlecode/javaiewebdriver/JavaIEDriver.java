@@ -97,14 +97,12 @@ public class JavaIEDriver
     User32.INSTANCE.SetForegroundWindow(new WinDef.HWND(new Pointer(ie.hwnd())));
   }
 
-  public void unminimize()
+  public void unminimize(HWND hwnd)
   {
-    Pointer p = new Pointer(ie.hwnd());
-    HWND hwnd = new HWND(p);
     int SW_RESTORE = 9;
     if (User32Plus.INSTANCE.IsIconic(hwnd))
     {
-      User32.INSTANCE.ShowWindow(new HWND(p), SW_RESTORE);
+      User32.INSTANCE.ShowWindow(hwnd, SW_RESTORE);
     }
   }
 
@@ -711,8 +709,8 @@ public class JavaIEDriver
   {
     try
     {
-      unminimize();
       HWND winHandle = new HWND(new Pointer(ie.hwnd()));
+      unminimize(winHandle);
       WindowFinder tabWindowClass = new WindowFinder("Internet Explorer_Server");
       User32Plus.INSTANCE.EnumChildWindows(winHandle, tabWindowClass, null);
       BufferedImage img = screenTaker.getScreenshot(tabWindowClass.getHwnd());
