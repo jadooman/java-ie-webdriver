@@ -28,7 +28,7 @@
 		          </descriptors>
 			    <archive>
 			      <manifest>
-			        <mainClass>com.googlecode.watijwebdriver.remote.WatijWebDriverRemote</mainClass>
+			        <mainClass>com.googlecode.javaiewebdriver.remote.JavaIEWebDriverRemote</mainClass>
 			      </manifest>
 			    </archive>
 			  </configuration>
