@@ -10,8 +10,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.SessionId;
 import org.openqa.selenium.remote.server.DefaultDriverFactory;
@@ -38,8 +36,6 @@ public class JavaIEDriverSessions implements DriverSessions
   private static Map<Capabilities, String> defaultDrivers = new HashMap<Capabilities, String>()
     {
       {
-        put(DesiredCapabilities.firefox(), FirefoxDriver.class.getName());
-        put(DesiredCapabilities.chrome(), ChromeDriver.class.getName());
         put(DesiredCapabilities.internetExplorer(), JavaIEDriver.class.getName());
       }
     };

@@ -37,7 +37,7 @@ public class WindowFinder implements WNDENUMPROC
   {
     char buffer[] = new char[50];
     User32.INSTANCE.GetClassName(hwnd, buffer, buffer.length);
-    String windowAtomClass = this.toJavaString(buffer);
+    String windowAtomClass = toJavaString(buffer);
     if (windowAtomClass.equals(atomClass))
     {
       this.hwnd = hwnd;

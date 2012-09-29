@@ -113,7 +113,7 @@ public class JavaIEDriver
 
   public static Capabilities getCapabilities()
   {
-    DesiredCapabilities capabilities = new DesiredCapabilities("ie", "1.0", Platform.getCurrent());
+    DesiredCapabilities capabilities = new DesiredCapabilities("ie", "", Platform.getCurrent());
 
     capabilities.setJavascriptEnabled(true);
     capabilities.setCapability(CapabilityType.SUPPORTS_FINDING_BY_CSS, true);
