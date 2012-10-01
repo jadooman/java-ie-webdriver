@@ -174,13 +174,14 @@ public class JavaIEWebElement
     }
     else
     {
-      if (elem.parentElement() == null)
+      IHTMLElement parent = elem.parentElement();
+      if (parent == null)
       {
         return true;
       }
       else
       {
-        return isVisible(elem.parentElement());
+        return isVisible(parent);
       }
     }
   }

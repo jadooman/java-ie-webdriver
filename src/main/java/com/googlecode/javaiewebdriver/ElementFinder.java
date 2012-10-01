@@ -4,7 +4,6 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 import javax.xml.xpath.XPath;
@@ -18,7 +17,9 @@ import ms.html.IHTMLElement;
 import ms.html.IHTMLElement2;
 import ms.html.IHTMLElementCollection;
 
+import org.apache.log4j.Logger;
 import org.cyberneko.html.parsers.DOMParser;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.w3c.dom.Document;
@@ -29,6 +30,8 @@ import org.xml.sax.InputSource;
 
 import se.fishtank.css.selectors.dom.DOMNodeSelector;
 
+import com4j.ComException;
+
 /**
  * Implements all the element finder logic for this web driver. XPath and CSS
  * finds are done via Java and all other types of finds are done via the IE
@@ -36,6 +39,7 @@ import se.fishtank.css.selectors.dom.DOMNodeSelector;
  */
 public class ElementFinder
 {
+  private Logger logger = Logger.getLogger(ElementFinder.class);
   protected static final int TEXT_NODE_TYPE = 3;
   private JavaIEDriver driver;
   private IHTMLElement elem;
@@ -54,24 +58,24 @@ public class ElementFinder
 
   public WebElement findElement(FindType type, String what, long implicitWait)
   {
-    try
+    long end = System.currentTimeMillis() + implicitWait;
+    do
     {
-      long end = System.currentTimeMillis() + implicitWait;
-      do
+      try
       {
         List<WebElement> elems = findElementsNoSleep(type, what);
         if (elems.size() > 0)
         {
           return elems.get(0);
         }
-        Thread.sleep(JavaIEDriver.WAIT_FOR_IDLE_SLEEP);
       }
-      while (System.currentTimeMillis() < end);
+      catch (ComException e)
+      {
+        logger.warn("ComException while searching for element: " + what, e);
+      }
+      JavaIEDriver.sleep(JavaIEDriver.WAIT_FOR_IDLE_SLEEP);
     }
-    catch (Exception e)
-    {
-      throw new WebDriverException(e.getMessage(), e);
-    }
+    while (System.currentTimeMillis() < end);
     throw new NoSuchElementException(type.name() + ":" + what);
   }
 
@@ -83,12 +87,20 @@ public class ElementFinder
       List<WebElement> elems = null;
       do
       {
-        elems = findElementsNoSleep(type, what);
-        if (elems.size() > 0)
+        try
         {
-          return elems;
+          elems = findElementsNoSleep(type, what);
+          if (elems.size() > 0)
+          {
+            return elems;
+          }
         }
-        Thread.sleep(JavaIEDriver.WAIT_FOR_IDLE_SLEEP);
+        catch (ComException e)
+        {
+          logger.warn("ComException while searching for element: " + what, e);
+          throw new WebDriverException(e.getMessage(), e);
+        }
+        JavaIEDriver.sleep(JavaIEDriver.WAIT_FOR_IDLE_SLEEP);
       }
       while (System.currentTimeMillis() < end);
       return elems;

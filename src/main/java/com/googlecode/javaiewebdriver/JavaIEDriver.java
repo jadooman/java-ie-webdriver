@@ -20,6 +20,7 @@ import ms.ie.tagREADYSTATE;
 
 import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.log4j.Logger;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
@@ -53,6 +54,7 @@ public class JavaIEDriver
   implements WebDriver, FindsById, FindsByLinkText, FindsByXPath, FindsByName, FindsByCssSelector,
   FindsByTagName, JavascriptExecutor, TakesScreenshot
 {
+  private Logger logger = Logger.getLogger(JavaIEDriver.class);
   private ScreenshotTaker screenTaker = new ScreenshotTaker();
   private ElementFinder finder = new ElementFinder(this);
   private IWebBrowser2 ie;
@@ -121,7 +123,7 @@ public class JavaIEDriver
     return capabilities;
   }
 
-  protected void sleep(long sleepTime)
+  protected static void sleep(long sleepTime)
   {
     try
     {
@@ -240,71 +242,83 @@ public class JavaIEDriver
   @Override
   public Object executeScript(String script, Object... args)
   {
-    try
+    long end = System.currentTimeMillis() + implicitWait;
+    do
     {
-      waitForIdle();
-      System.out.println("Executing script: " + script);
-      for (Object obj : args)
+      try
       {
-        System.out.println("arg: " + obj.getClass().getName() + " -> " + obj);
+        return executeScriptInternal(script, args);
       }
-      StringBuilder argsJS = new StringBuilder();
-      argsJS.append("var arguments = [");
-      for (int i = 0; i < args.length; i++)
+      catch (ComException e)
       {
-        if (args[0] instanceof JavaIEWebElement)
+        logger.warn("ComException while executing javascript.", e);
+      }
+      JavaIEDriver.sleep(JavaIEDriver.WAIT_FOR_IDLE_SLEEP);
+    }
+    while (System.currentTimeMillis() < end);
+    throw new WebDriverException("Unable to execute javascript.");
+  }
+
+  protected Object executeScriptInternal(String script, Object... args)
+  {
+    waitForIdle();
+    System.out.println("Executing script: " + script);
+    for (Object obj : args)
+    {
+      System.out.println("arg: " + obj.getClass().getName() + " -> " + obj);
+    }
+    StringBuilder argsJS = new StringBuilder();
+    argsJS.append("var arguments = [");
+    for (int i = 0; i < args.length; i++)
+    {
+      if (args[0] instanceof JavaIEWebElement)
+      {
+        int index = 0; // sourceIndex
+        argsJS.append("document.all[" + index + "]");
+        if (i < args.length - 1)
         {
-          int index = 0; // sourceIndex
-          argsJS.append("document.all[" + index + "]");
-          if (i < args.length - 1)
-          {
-            argsJS.append(", ");
-          }
+          argsJS.append(", ");
         }
-      }
-      argsJS.append("];");
-      if ("arguments[0].focus();".equals(script))
-      {
-        JavaIEWebElement webElement = (JavaIEWebElement) args[0];
-        webElement.focus();
-        return null;
-      }
-      else
-      {
-        waitForIdle();
-        script = "function WEBDRIVER_EXEC_FUNC() {\n" + script + "\n}\n";
-        script += "try { ";
-        script += "document.documentElement.setAttribute('WEBDRIVER_EXEC_RESULTS', '' + WEBDRIVER_EXEC_FUNC())";
-        script += " } catch (err) {}";
-        getDocument2().parentWindow().execScript(script, "javascript");
-        IHTMLDocument3 doc3 = getDocument3();
-        Object results = null;
-        if (doc3 != null)
-        {
-          IHTMLElement docElem = doc3.documentElement();
-          if (docElem != null)
-          {
-            results = docElem.getAttribute("WEBDRIVER_EXEC_RESULTS", 2);
-            if (results != null)
-            {
-              results = results.toString();
-            }
-            if ("true".equals(results))
-            {
-              results = Boolean.TRUE;
-            }
-            else if ("false".equals(results))
-            {
-              results = Boolean.FALSE;
-            }
-          }
-        }
-        return results;
       }
     }
-    catch (Exception e)
+    argsJS.append("];");
+    if ("arguments[0].focus();".equals(script))
     {
-      throw new WebDriverException(e.getMessage(), e);
+      JavaIEWebElement webElement = (JavaIEWebElement) args[0];
+      webElement.focus();
+      return null;
+    }
+    else
+    {
+      waitForIdle();
+      script = "function WEBDRIVER_EXEC_FUNC() {\n" + script + "\n}\n";
+      script += "try { ";
+      script += "document.documentElement.setAttribute('WEBDRIVER_EXEC_RESULTS', '' + WEBDRIVER_EXEC_FUNC())";
+      script += " } catch (err) {}";
+      getDocument2().parentWindow().execScript(script, "javascript");
+      IHTMLDocument3 doc3 = getDocument3();
+      Object results = null;
+      if (doc3 != null)
+      {
+        IHTMLElement docElem = doc3.documentElement();
+        if (docElem != null)
+        {
+          results = docElem.getAttribute("WEBDRIVER_EXEC_RESULTS", 2);
+          if (results != null)
+          {
+            results = results.toString();
+          }
+          if ("true".equals(results))
+          {
+            results = Boolean.TRUE;
+          }
+          else if ("false".equals(results))
+          {
+            results = Boolean.FALSE;
+          }
+        }
+      }
+      return results;
     }
   }
 

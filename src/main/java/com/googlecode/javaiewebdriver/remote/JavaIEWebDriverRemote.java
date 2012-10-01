@@ -72,7 +72,7 @@ public class JavaIEWebDriverRemote
       SelectChannelConnector connector = new SelectChannelConnector();
       connector.setPort(port);
       server.addConnector(connector);
-      server.setGracefulShutdown(10000);
+      server.setGracefulShutdown(500);
       server.start();
     }
   }
