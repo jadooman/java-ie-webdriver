@@ -1,4 +1,4 @@
-package ms.ie  ;
+package com.ie  ;
 
 import com4j.*;
 
@@ -6,7 +6,7 @@ import com4j.*;
  * Web Browser Interface for IE4.
  */
 @IID("{D30C1661-CDAF-11D0-8A3E-00C04FC9E26E}")
-public interface IWebBrowser2 extends ms.ie.IWebBrowserApp {
+public interface IWebBrowser2 extends com.ie.IWebBrowserApp {
   // Methods:
   /**
    * <p>
@@ -33,22 +33,22 @@ public interface IWebBrowser2 extends ms.ie.IWebBrowserApp {
    * <p>
    * IOleCommandTarget::QueryStatus
    * </p>
-   * @param cmdID Mandatory ms.ie.OLECMDID parameter.
-   * @return  Returns a value of type ms.ie.OLECMDF
+   * @param cmdID Mandatory com.ie.OLECMDID parameter.
+   * @return  Returns a value of type com.ie.OLECMDF
    */
 
   @DISPID(501) //= 0x1f5. The runtime will prefer the VTID if present
   @VTID(53)
-  ms.ie.OLECMDF queryStatusWB(
-    ms.ie.OLECMDID cmdID);
+  com.ie.OLECMDF queryStatusWB(
+    com.ie.OLECMDID cmdID);
 
 
   /**
    * <p>
    * IOleCommandTarget::Exec
    * </p>
-   * @param cmdID Mandatory ms.ie.OLECMDID parameter.
-   * @param cmdexecopt Mandatory ms.ie.OLECMDEXECOPT parameter.
+   * @param cmdID Mandatory com.ie.OLECMDID parameter.
+   * @param cmdexecopt Mandatory com.ie.OLECMDEXECOPT parameter.
    * @param pvaIn Optional parameter. Default value is com4j.Variant.getMissing()
    * @param pvaOut Optional parameter. Default value is com4j.Variant.getMissing()
    */
@@ -56,8 +56,8 @@ public interface IWebBrowser2 extends ms.ie.IWebBrowserApp {
   @DISPID(502) //= 0x1f6. The runtime will prefer the VTID if present
   @VTID(54)
   void execWB(
-    ms.ie.OLECMDID cmdID,
-    ms.ie.OLECMDEXECOPT cmdexecopt,
+    com.ie.OLECMDID cmdID,
+    com.ie.OLECMDEXECOPT cmdexecopt,
     @Optional java.lang.Object pvaIn,
     @Optional java.lang.Object pvaOut);
 
@@ -83,12 +83,12 @@ public interface IWebBrowser2 extends ms.ie.IWebBrowserApp {
    * <p>
    * Getter method for the COM property "ReadyState"
    * </p>
-   * @return  Returns a value of type ms.ie.tagREADYSTATE
+   * @return  Returns a value of type com.ie.tagREADYSTATE
    */
 
   @DISPID(-525) //= 0xfffffdf3. The runtime will prefer the VTID if present
   @VTID(56)
-  ms.ie.tagREADYSTATE readyState();
+  com.ie.tagREADYSTATE readyState();
 
 
   /**

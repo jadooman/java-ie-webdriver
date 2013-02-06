@@ -14,9 +14,6 @@ import javax.imageio.ImageIO;
 import ms.html.IHTMLDocument2;
 import ms.html.IHTMLDocument3;
 import ms.html.IHTMLElement;
-import ms.ie.ClassFactory;
-import ms.ie.IWebBrowser2;
-import ms.ie.tagREADYSTATE;
 
 import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.codec.binary.Base64;
@@ -44,6 +41,10 @@ import org.openqa.selenium.logging.Logs;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.ie.ClassFactory;
+import com.ie.IWebBrowser2;
+import com.ie.IWebBrowserApp;
+import com.ie.tagREADYSTATE;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
@@ -198,7 +199,7 @@ public class JavaIEDriver
     {
       int loopCount = 0; // sometimes ie gets 'stuck'
       boolean ieReady = ie.readyState() == tagREADYSTATE.READYSTATE_COMPLETE;
-      while ((ie.busy() || !ieReady) && loopCount < MAX_BUSY_LOOPS)
+      while (!ieReady && loopCount < MAX_BUSY_LOOPS)
       {
         Thread.sleep(WAIT_FOR_IDLE_SLEEP);
         ieReady = ie.readyState() == tagREADYSTATE.READYSTATE_COMPLETE;
@@ -473,7 +474,7 @@ public class JavaIEDriver
       {
         try
         {
-          Pointer p = new Pointer(ie.hwnd());
+          Pointer p = new Pointer(ie.queryInterface(IWebBrowserApp.class).hwnd());
           int SW_MAXIMIZE = 3;
           User32.INSTANCE.ShowWindow(new HWND(p), SW_MAXIMIZE);
         }

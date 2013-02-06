@@ -1,4 +1,4 @@
-package ms.ie  ;
+package com.ie  ;
 
 import com4j.*;
 
@@ -6,7 +6,7 @@ import com4j.*;
  * IShellNameSpace Interface
  */
 @IID("{E572D3C9-37BE-4AE2-825D-D521763E3108}")
-public interface IShellNameSpace extends ms.ie.IShellFavoritesNameSpace {
+public interface IShellNameSpace extends com.ie.IShellFavoritesNameSpace {
   // Methods:
   /**
    * <p>

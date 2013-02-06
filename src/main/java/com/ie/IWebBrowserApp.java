@@ -1,4 +1,4 @@
-package ms.ie  ;
+package com.ie  ;
 
 import com4j.*;
 
@@ -6,7 +6,7 @@ import com4j.*;
  * Web Browser Application Interface.
  */
 @IID("{0002DF05-0000-0000-C000-000000000046}")
-public interface IWebBrowserApp extends ms.ie.IWebBrowser {
+public interface IWebBrowserApp extends com.ie.IWebBrowser {
   // Methods:
   /**
    * <p>
@@ -87,12 +87,12 @@ public interface IWebBrowserApp extends ms.ie.IWebBrowser {
    * <p>
    * Getter method for the COM property "HWND"
    * </p>
-   * @return  Returns a value of type long
+   * @return  Returns a value of type int
    */
 
   @DISPID(-515) //= 0xfffffdfd. The runtime will prefer the VTID if present
   @VTID(37)
-  long hwnd();
+  int hwnd();
 
 
   /**

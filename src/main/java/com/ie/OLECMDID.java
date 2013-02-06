@@ -1,4 +1,4 @@
-package ms.ie  ;
+package com.ie  ;
 
 import com4j.*;
 
@@ -395,6 +395,66 @@ public enum OLECMDID implements ComEnum {
    * </p>
    */
   OLECMDID_UPDATETRAVELENTRY_DATARECOVERY(67),
+  /**
+   * <p>
+   * The value of this constant is 68
+   * </p>
+   */
+  OLECMDID_SHOWTASKDLG(68),
+  /**
+   * <p>
+   * The value of this constant is 69
+   * </p>
+   */
+  OLECMDID_POPSTATEEVENT(69),
+  /**
+   * <p>
+   * The value of this constant is 70
+   * </p>
+   */
+  OLECMDID_VIEWPORT_MODE(70),
+  /**
+   * <p>
+   * The value of this constant is 71
+   * </p>
+   */
+  OLECMDID_LAYOUT_VIEWPORT_WIDTH(71),
+  /**
+   * <p>
+   * The value of this constant is 72
+   * </p>
+   */
+  OLECMDID_VISUAL_VIEWPORT_EXCLUDE_BOTTOM(72),
+  /**
+   * <p>
+   * The value of this constant is 73
+   * </p>
+   */
+  OLECMDID_USER_OPTICAL_ZOOM(73),
+  /**
+   * <p>
+   * The value of this constant is 74
+   * </p>
+   */
+  OLECMDID_PAGEAVAILABLE(74),
+  /**
+   * <p>
+   * The value of this constant is 75
+   * </p>
+   */
+  OLECMDID_GETUSERSCALABLE(75),
+  /**
+   * <p>
+   * The value of this constant is 76
+   * </p>
+   */
+  OLECMDID_UPDATE_CARET(76),
+  /**
+   * <p>
+   * The value of this constant is 77
+   * </p>
+   */
+  OLECMDID_ENABLE_VISIBILITY(77),
   ;
 
   private final int value;

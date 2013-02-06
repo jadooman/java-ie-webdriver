@@ -1,4 +1,4 @@
-package ms.ie.events;
+package com.ie.events;
 
 import com4j.*;
 

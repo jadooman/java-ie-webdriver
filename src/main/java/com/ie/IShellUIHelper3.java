@@ -1,4 +1,4 @@
-package ms.ie  ;
+package com.ie  ;
 
 import com4j.*;
 
@@ -6,7 +6,7 @@ import com4j.*;
  * Shell UI Helper Control Interface 3
  */
 @IID("{528DF2EC-D419-40BC-9B6D-DCDBF9C1B25D}")
-public interface IShellUIHelper3 extends ms.ie.IShellUIHelper2 {
+public interface IShellUIHelper3 extends com.ie.IShellUIHelper2 {
   // Methods:
   /**
    * @param url Mandatory java.lang.String parameter.

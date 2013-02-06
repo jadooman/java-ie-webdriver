@@ -1,4 +1,4 @@
-package ms.ie.events;
+package com.ie.events;
 
 import com4j.*;
 
@@ -556,6 +556,50 @@ public abstract class DWebBrowserEvents2 {
         java.lang.Object redirectURL,
         java.lang.Object frame,
         java.lang.Object statusCode) {
+            throw new UnsupportedOperationException();
+      }
+
+
+      /**
+       * <p>
+       * Fired prior to the first script execution.
+       * </p>
+       * @param pDispWindow Mandatory com4j.Com4jObject parameter.
+       */
+
+      @DISPID(290)
+      public void beforeScriptExecute(
+        com4j.Com4jObject pDispWindow) {
+            throw new UnsupportedOperationException();
+      }
+
+
+      /**
+       * <p>
+       * Fired after a Web Worker has been started.
+       * </p>
+       * @param dwUniqueID Mandatory int parameter.
+       * @param bstrWorkerLabel Mandatory java.lang.String parameter.
+       */
+
+      @DISPID(288)
+      public void webWorkerStarted(
+        int dwUniqueID,
+        java.lang.String bstrWorkerLabel) {
+            throw new UnsupportedOperationException();
+      }
+
+
+      /**
+       * <p>
+       * Fired after a Web Worker has closed
+       * </p>
+       * @param dwUniqueID Mandatory int parameter.
+       */
+
+      @DISPID(289)
+      public void webWorkerFinsihed(
+        int dwUniqueID) {
             throw new UnsupportedOperationException();
       }
 

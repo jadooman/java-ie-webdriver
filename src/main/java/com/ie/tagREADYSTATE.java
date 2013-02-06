@@ -1,32 +1,38 @@
-package ms.ie  ;
+package com.ie  ;
 
 import com4j.*;
 
 /**
  */
-public enum OLECMDEXECOPT {
+public enum tagREADYSTATE {
   /**
    * <p>
    * The value of this constant is 0
    * </p>
    */
-  OLECMDEXECOPT_DODEFAULT, // 0
+  READYSTATE_UNINITIALIZED, // 0
   /**
    * <p>
    * The value of this constant is 1
    * </p>
    */
-  OLECMDEXECOPT_PROMPTUSER, // 1
+  READYSTATE_LOADING, // 1
   /**
    * <p>
    * The value of this constant is 2
    * </p>
    */
-  OLECMDEXECOPT_DONTPROMPTUSER, // 2
+  READYSTATE_LOADED, // 2
   /**
    * <p>
    * The value of this constant is 3
    * </p>
    */
-  OLECMDEXECOPT_SHOWHELP, // 3
+  READYSTATE_INTERACTIVE, // 3
+  /**
+   * <p>
+   * The value of this constant is 4
+   * </p>
+   */
+  READYSTATE_COMPLETE, // 4
 }

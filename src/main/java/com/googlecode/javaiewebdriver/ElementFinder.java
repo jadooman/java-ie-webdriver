@@ -171,6 +171,10 @@ public class ElementFinder
         {
           int index = elem.sourceIndex();
           parentElem = getAllElements(htmlDoc).get(index);
+          if (!parentElem.getTagName().equals(elem.tagName()))
+          {
+            throw new WebDriverException("Unable to match IE DOM element to Java DOM element!");
+          }
         }
         List<Element> elements = findCSS(parentElem, what);
         for (Element elem : elements)
@@ -205,6 +209,18 @@ public class ElementFinder
         {
           int index = elem.sourceIndex();
           parentElem = getAllElements(htmlDoc).get(index);
+          if (!elem.tagName().equals(parentElem.getTagName()))
+          {
+            String id = elem.id();
+            if (id != null && !id.equals(""))
+            {
+              parentElem = htmlDoc.getElementById(id);
+            }
+            else
+            {
+              throw new WebDriverException("Fatal Error: IE/Java DOM Element mismatch!");
+            }
+          }
         }
         List<Element> elements = findXPath(parentElem, what);
         for (Element elem : elements)
