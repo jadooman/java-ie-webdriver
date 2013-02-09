@@ -173,7 +173,15 @@ public class ElementFinder
           parentElem = getAllElements(htmlDoc).get(index);
           if (!parentElem.getTagName().equals(elem.tagName()))
           {
-            throw new WebDriverException("Unable to match IE DOM element to Java DOM element!");
+            String id = elem.id();
+            if (id != null && !id.equals(""))
+            {
+              parentElem = htmlDoc.getElementById(id);
+            }
+            else
+            {
+              throw new WebDriverException("Fatal Error: IE/Java DOM Element mismatch!");
+            }
           }
         }
         List<Element> elements = findCSS(parentElem, what);

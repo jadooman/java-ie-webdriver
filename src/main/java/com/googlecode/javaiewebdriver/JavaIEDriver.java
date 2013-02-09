@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -24,6 +25,7 @@ import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.Point;
@@ -42,6 +44,7 @@ import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.ie.ClassFactory;
+import com.ie.IShellWindows;
 import com.ie.IWebBrowser2;
 import com.ie.IWebBrowserApp;
 import com.ie.tagREADYSTATE;
@@ -49,6 +52,7 @@ import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinDef.HWND;
+import com4j.Com4jObject;
 import com4j.ComException;
 
 public class JavaIEDriver
@@ -61,9 +65,12 @@ public class JavaIEDriver
   private IWebBrowser2 ie;
   protected static final int WAIT_FOR_IDLE_SLEEP = 500;
   protected static final int MAX_BUSY_LOOPS = 10;
+  protected static final String WINDOW_HANDLE_PROP = "JAVA_IE_DRIVER_HANDLE";
+  protected static final Random random = new Random(System.currentTimeMillis());
   private long implicitWait = 0;
   private long scriptTimeout = 0;
   private long pageLoadTimeout = 0;
+  private String originalHandle = null;
 
   public JavaIEDriver()
   {
@@ -86,6 +93,7 @@ public class JavaIEDriver
         sleep(WAIT_FOR_IDLE_SLEEP);
       }
     }
+    originalHandle = getWindowHandle();
     ie.visible(true);
     bringToFront();
   }
@@ -230,14 +238,7 @@ public class JavaIEDriver
   @Override
   public String getTitle()
   {
-    if (getDocument2() != null)
-    {
-      return getDocument2().title();
-    }
-    else
-    {
-      return "";
-    }
+    return ie.locationName();
   }
 
   @Override
@@ -263,10 +264,10 @@ public class JavaIEDriver
   protected Object executeScriptInternal(String script, Object... args)
   {
     waitForIdle();
-    System.out.println("Executing script: " + script);
+    logger.info("Executing script: " + script);
     for (Object obj : args)
     {
-      System.out.println("arg: " + obj.getClass().getName() + " -> " + obj);
+      logger.info("arg: " + obj.getClass().getName() + " -> " + obj);
     }
     StringBuilder argsJS = new StringBuilder();
     argsJS.append("var arguments = [");
@@ -294,7 +295,8 @@ public class JavaIEDriver
       waitForIdle();
       script = "function WEBDRIVER_EXEC_FUNC() {\n" + script + "\n}\n";
       script += "try { ";
-      script += "document.documentElement.setAttribute('WEBDRIVER_EXEC_RESULTS', '' + WEBDRIVER_EXEC_FUNC())";
+      script += "var results = WEBDRIVER_EXEC_FUNC(); ";
+      script += "document.documentElement.setAttribute('WEBDRIVER_EXEC_RESULTS', '' + results); ";
       script += " } catch (err) {}";
       getDocument2().parentWindow().execScript(script, "javascript");
       IHTMLDocument3 doc3 = getDocument3();
@@ -305,7 +307,11 @@ public class JavaIEDriver
         if (docElem != null)
         {
           results = docElem.getAttribute("WEBDRIVER_EXEC_RESULTS", 2);
-          if (results != null)
+          if (script.contains("return [ window.id, window.name, document.title, document.url ]"))
+          {
+            results = (results.toString() + " ,").split(",");
+          }
+          else if (results != null)
           {
             results = results.toString();
           }
@@ -332,21 +338,40 @@ public class JavaIEDriver
   @Override
   public String getWindowHandle()
   {
-    try
+    return findWindowHandle(ie);
+  }
+
+  protected String findWindowHandle(IWebBrowser2 ieWindow)
+  {
+    Integer handle = (Integer) ieWindow.getProperty(WINDOW_HANDLE_PROP);
+    if (handle == null)
     {
-      return String.valueOf(0);
+      handle = random.nextInt();
+      ieWindow.putProperty(WINDOW_HANDLE_PROP, handle);
     }
-    catch (Exception e)
-    {
-      throw new WebDriverException(e.getMessage(), e);
-    }
+    return Integer.toString(handle);
   }
 
   @Override
   public Set<String> getWindowHandles()
   {
     final Set<String> allHandles = new HashSet<String>();
-    allHandles.add(String.valueOf(0));
+    IShellWindows shellWindows = ClassFactory.createShellWindows();
+    int windowCount = shellWindows.count();
+    for (int i = 0; i < windowCount; i++)
+    {
+      IWebBrowser2 ieWindow = shellWindows.item(i).queryInterface(IWebBrowser2.class);
+      String name = ieWindow.name();
+      if (name.equals("Windows Internet Explorer"))
+      {
+        boolean visible = ieWindow.visible();
+        if (visible)
+        {
+          String handle = findWindowHandle(ieWindow);
+          allHandles.add(handle);
+        }
+      }
+    }
     return allHandles;
   }
 
@@ -591,7 +616,41 @@ public class JavaIEDriver
     @Override
     public WebDriver window(String nameOrHandle)
     {
-      return JavaIEDriver.this;
+      if (nameOrHandle == null || "".equals(nameOrHandle))
+      {
+        nameOrHandle = originalHandle;
+      }
+      WebDriver newDriver = null;
+      IShellWindows shellWindows = ClassFactory.createShellWindows();
+      int windowCount = shellWindows.count();
+      for (int i = 0; i < windowCount; i++)
+      {
+        Com4jObject shellWindow = shellWindows.item(i);
+        if (shellWindow != null)
+        {
+          IWebBrowser2 ieWindow = shellWindow.queryInterface(IWebBrowser2.class);
+          String name = ieWindow.name();
+          if (name != null && name.equals("Windows Internet Explorer"))
+          {
+            boolean visible = ieWindow.visible();
+            if (visible)
+            {
+              String locName = ieWindow.locationName();
+              String handle = findWindowHandle(ieWindow);
+              if (nameOrHandle.equals(locName) || nameOrHandle.equals(handle))
+              {
+                ie = ieWindow;
+                newDriver = JavaIEDriver.this;
+              }
+            }
+          }
+        }
+      }
+      if (newDriver == null)
+      {
+        throw new NoSuchWindowException("Cannot find window: " + nameOrHandle);
+      }
+      return newDriver;
     }
 
     @Override
